@@ -4,29 +4,39 @@ namespace VectorGraphicViewer.Desktop.Shapes
 {
     public class Circle : Shape
     {
-        public PointF Center { get; private set; }
-        public float Radius { get; private set; }
+        public float Radius { get; set; }
         public bool Filled { get; private set; }
 
-        public Circle(Color color, PointF center, float radius, bool filled) : base(color)
+        public Circle(Color color, float radius, bool filled) : base(color)
         {
-            Center = center;
             Radius = radius;
             Filled = filled;
         }
 
         public override void Draw(Graphics graphics)
         {
+            var center = PointFs[0];
+            var rec = new RectangleF(center.X - Radius, center.Y + Radius, Radius * 2, Radius * 2);
+
             if (Filled)
             {
-                var pen = new Pen(Color, 3);
-                graphics.DrawEllipse(pen, Center.X, Center.Y, Radius * 2, Radius * 2);
+                var brush = new SolidBrush(Color);
+                graphics.FillEllipse(brush, rec);
             }
             else
             {
-                var brush = new SolidBrush(Color);
-                graphics.FillEllipse(brush, Center.X, Center.Y, Radius * 2, Radius * 2);
+                var pen = new Pen(Color, 3);
+                graphics.DrawEllipse(pen, rec);
             }
+        }
+
+        public override float GetWidth()
+        {
+            return Radius * 2;
+        }
+        public override float GetHeight()
+        {
+            return Radius * 2;
         }
     }
 

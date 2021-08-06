@@ -24,12 +24,12 @@ namespace VectorGraphicViewer.Desktop.Extensions
                     return System.Drawing.Color.Transparent;
             }
         }
-        
-        public static PointF ToPointF(this string point, string seperator = ";")
-        {
-            var pointArray = point.Split(seperator).Select(x => { float.TryParse(x, NumberStyles.Any,new NumberFormatInfo() { NumberDecimalSeparator = "," }, out float fragment); return fragment; }).ToArray();
 
-            return new PointF(pointArray[0], pointArray[1]);
+        public static PointF ToPointF(this string point, float scale = 1, float offsetX = 0, float offsetY = 0, string seperator = ";")
+        {
+            var pointArray = point.Split(seperator).Select(x => { float.TryParse(x, NumberStyles.Any, new NumberFormatInfo() { NumberDecimalSeparator = "," }, out float fragment); return fragment; }).ToArray();
+
+            return new PointF((pointArray[0] + offsetX) * scale, (pointArray[1] + offsetY) * scale);
         }
     }
 }

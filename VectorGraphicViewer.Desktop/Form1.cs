@@ -17,46 +17,92 @@ namespace VectorGraphicViewer.Desktop
     public partial class Form1 : Form
     {
         private readonly IFileDataReader _fileDataReader;
-
+        List<ShapeInfo> ShapeInfos = null;
         public Form1()
         {
             _fileDataReader = Program.GetService<IFileDataReader>();
 
             InitializeComponent();
-            //Screen myScreen = Screen.FromControl(this);
-            //Rectangle area = myScreen.WorkingArea;
-            //this.Size = new Size(area.Width, area.Height);
+            Screen myScreen = Screen.FromControl(this);
+            Rectangle area = myScreen.WorkingArea;
+            MaximumSize = new Size(area.Width, area.Height);
+
+            var filePath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, "Data/initialData.json");
+            ShapeInfos = _fileDataReader.Read(filePath);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            var filePath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName, "Data/initialData.json");
-            var data = _fileDataReader.Read(filePath);
+            var width = (float)ClientSize.Width;
+            var height = (float)ClientSize.Height;
 
-            foreach (var item in data)
+            var shapes = new List<Shape>();
+            foreach (var item in ShapeInfos)
             {
                 if (item.Type == ShapeConts.Line)
                 {
-                    var pointFA = item.A.ToPointF();
-                    var pointFB = item.B.ToPointF();
-                    var line = new Line(item.Color.ToColor(), pointFA, pointFB);
-                    line.Draw(e.Graphics);
+                    var pointFA = item.A.ToPointF() + new SizeF(width / 2, height / 2);
+                    var pointFB = item.B.ToPointF() + new SizeF(width / 2, height / 2);
+
+                    var graphic = new Line(item.Color.ToColor());
+                    graphic.AddPointF(pointFA);
+                    graphic.AddPointF(pointFB);
+                    shapes.Add(graphic);
                 }
                 else if (item.Type == ShapeConts.Circle)
                 {
-                    var center = item.Center.ToPointF();
-                    var circle = new Circle(item.Color.ToColor(), center, item.Radius, item.Filled);
-                    circle.Draw(e.Graphics);
+                    var center = item.Center.ToPointF() + new SizeF(width / 2, height / 2);
+
+                    var graphic = new Circle(item.Color.ToColor(), item.Radius, item.Filled);
+                    graphic.AddPointF(center);
+                    shapes.Add(graphic);
                 }
                 else if (item.Type == ShapeConts.Triangle)
                 {
-                    var pointFA = item.A.ToPointF();
-                    var pointFB = item.B.ToPointF();
-                    var pointFC = item.C.ToPointF();
-                    var circle = new Triangle(item.Color.ToColor(), pointFA, pointFB, pointFC, item.Filled);
-                    circle.Draw(e.Graphics);
+                    var pointFA = item.A.ToPointF() + new SizeF(width / 2, height / 2);
+                    var pointFB = item.B.ToPointF() + new SizeF(width / 2, height / 2);
+                    var pointFC = item.C.ToPointF() + new SizeF(width / 2, height / 2);
+
+                    var graphic = new Triangle(item.Color.ToColor(), item.Filled);
+                    graphic.AddPointF(pointFA);
+                    graphic.AddPointF(pointFB);
+                    graphic.AddPointF(pointFC);
+                    shapes.Add(graphic);
                 }
             }
+
+            var shapesWidth = shapes.Sum(x => x.GetWidth());
+            var shapesHeight = shapes.Sum(x => x.GetHeight());
+
+            var scaleX = width/2 / shapesWidth;
+            var scaleY = height/2 / shapesHeight;
+            foreach (var shape in shapes)
+            {
+                if (shape is Line)
+                {
+                    var item = shape.PointFs[1];
+                    //shape.PointFs[1] = PointF.Empty + new SizeF(item.X * scaleX, item.Y);
+                }
+                //else if (shape is Circle)
+                //{
+                //    ((Circle)shape).Radius = ((Circle)shape).Radius * scaleX;
+                //    shape.PointFs[0] = PointF.Empty + new SizeF(shape.PointFs[0].X * scaleX, shape.PointFs[0].Y * scaleY); ;
+                //}
+                else if (shape is Triangle)
+                {
+                    //var item = shape.PointFs[1];
+                    //shape.PointFs[1] = PointF.Empty + new SizeF(item.X * scaleX, item.Y);
+                    //var item2 = shape.PointFs[2];
+                    //shape.PointFs[2] = PointF.Empty + new SizeF(item2.X * scaleX, item.Y);
+                }
+
+                shape.Draw(e.Graphics);
+            }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            Invalidate();
         }
     }
 }
