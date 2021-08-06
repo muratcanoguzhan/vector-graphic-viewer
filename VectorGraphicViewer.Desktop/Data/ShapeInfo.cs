@@ -12,7 +12,7 @@ namespace VectorGraphicViewer.Desktop.Data
         public string C { get; set; }
         public string Color { get; set; }
         public string Center { get; set; }
-        public double? Radius { get; set; }
-        public bool? Filled { get; set; }
+        public float Radius { get; set; }
+        public bool Filled { get; set; }
     }
 }

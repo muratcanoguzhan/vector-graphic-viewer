@@ -21,7 +21,7 @@ namespace VectorGraphicViewer.Desktop
         public Form1()
         {
             _fileDataReader = Program.GetService<IFileDataReader>();
-            
+
             InitializeComponent();
             //Screen myScreen = Screen.FromControl(this);
             //Rectangle area = myScreen.WorkingArea;
@@ -37,10 +37,24 @@ namespace VectorGraphicViewer.Desktop
             {
                 if (item.Type == ShapeConts.Line)
                 {
-                    var floatPointA = item.A.ToFloatPoint();
-                    var floatPointB = item.B.ToFloatPoint();
-                    var line = new Line(item.Color.ToColor(), floatPointA.X, floatPointA.Y, floatPointB.X, floatPointB.Y);
+                    var pointFA = item.A.ToPointF();
+                    var pointFB = item.B.ToPointF();
+                    var line = new Line(item.Color.ToColor(), pointFA, pointFB);
                     line.Draw(e.Graphics);
+                }
+                else if (item.Type == ShapeConts.Circle)
+                {
+                    var center = item.Center.ToPointF();
+                    var circle = new Circle(item.Color.ToColor(), center, item.Radius, item.Filled);
+                    circle.Draw(e.Graphics);
+                }
+                else if (item.Type == ShapeConts.Triangle)
+                {
+                    var pointFA = item.A.ToPointF();
+                    var pointFB = item.B.ToPointF();
+                    var pointFC = item.C.ToPointF();
+                    var circle = new Triangle(item.Color.ToColor(), pointFA, pointFB, pointFC, item.Filled);
+                    circle.Draw(e.Graphics);
                 }
             }
         }

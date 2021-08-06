@@ -25,7 +25,7 @@ namespace VectorGraphicViewer.Desktop.Extensions
             }
         }
         
-        public static PointF ToFloatPoint(this string point, string seperator = ";")
+        public static PointF ToPointF(this string point, string seperator = ";")
         {
             var pointArray = point.Split(seperator).Select(x => { float.TryParse(x, NumberStyles.Any,new NumberFormatInfo() { NumberDecimalSeparator = "," }, out float fragment); return fragment; }).ToArray();
 

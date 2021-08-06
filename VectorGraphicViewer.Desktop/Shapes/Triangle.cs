@@ -9,7 +9,7 @@ namespace VectorGraphicViewer.Desktop.Shapes
         public PointF C { get; private set; }
         public bool Filled { get; private set; }
 
-        public Triangle(Color color, float ax, float ay, float bx, float by, PointF a, PointF b, PointF c, bool filled) : base(color)
+        public Triangle(Color color, PointF a, PointF b, PointF c, bool filled) : base(color)
         {
             A = a;
             B = b;
