@@ -31,5 +31,12 @@ namespace VectorGraphicViewer.Desktop.Extensions
 
             return new PointF((pointArray[0] + offsetX) * scale, (pointArray[1] + offsetY) * scale);
         }
+        
+        public static SizeF ToSizeF(this string point, float scale = 1, float offsetX = 0, float offsetY = 0, string seperator = ";")
+        {
+            var pointArray = point.Split(seperator).Select(x => { float.TryParse(x, NumberStyles.Any, new NumberFormatInfo() { NumberDecimalSeparator = "," }, out float fragment); return fragment; }).ToArray();
+
+            return new SizeF((pointArray[0] + offsetX) * scale, (pointArray[1] + offsetY) * scale);
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace VectorGraphicViewer.Desktop.Data
         public string Center { get; set; }
         public float Radius { get; set; }
         public bool Filled { get; set; }
+        public string Size { get; set; }
     }
 }

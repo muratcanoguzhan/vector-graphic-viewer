@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using VectorGraphicViewer.Desktop.Data;
 using VectorGraphicViewer.Desktop.Extensions;
 using VectorGraphicViewer.Desktop.Shapes;
+using MyRectangle = VectorGraphicViewer.Desktop.Shapes.Rectangle;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace VectorGraphicViewer.Desktop
 {
@@ -69,13 +71,21 @@ namespace VectorGraphicViewer.Desktop
                     graphic.AddPointF(pointFC);
                     shapes.Add(graphic);
                 }
+                else if (item.Type == ShapeConts.Rectangle)
+                {
+                    var location = item.A.ToPointF() + new SizeF(width / 2, height / 2);
+                    var size = item.Size.ToSizeF();
+                    var graphic = new MyRectangle(item.Color.ToColor(), item.Filled, size);
+                    graphic.AddPointF(location);
+                    shapes.Add(graphic);
+                }
             }
 
             var shapesWidth = shapes.Sum(x => x.GetWidth());
             var shapesHeight = shapes.Sum(x => x.GetHeight());
 
-            var scaleX = width/2 / shapesWidth;
-            var scaleY = height/2 / shapesHeight;
+            var scaleX = width / 2 / shapesWidth;
+            var scaleY = height / 2 / shapesHeight;
             foreach (var shape in shapes)
             {
                 if (shape is Line)
@@ -103,6 +113,11 @@ namespace VectorGraphicViewer.Desktop
         private void Form1_Resize(object sender, EventArgs e)
         {
             Invalidate();
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            label1.Text = $"{e.X} {e.Y}";
         }
     }
 }
