@@ -19,5 +19,12 @@
     "c": "0; 21",
     "filled": true,
     "color": "127; 255; 0; 255"
+  },
+  {
+    "type": "rectangle",
+    "size": "30; 50",
+    "a": "45; 45",
+    "filled": true,
+    "color": "127; 255; 255; 0"
   }
 ]
